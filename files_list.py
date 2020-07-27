@@ -9,15 +9,20 @@ import hashlib
 SCAN_PATHS = ['D:\Duke\Images']
 
 
+
+# Duke
+#   Images
+#   Sounds
+#   Videos
+#   Documents
+
+
+
+
 def main():
     lines = []
     for path in SCAN_PATHS:
-        # print(path)
-        # for fileName in os.listdir(path):
-        #    print(fileName)
         for root, dirs, files in os.walk(path):
-            # print('root:' + str(root))
-            # print('dirs:' + str(dirs))
             for file in files:
                 line = ','.join((getMd5(os.path.join(root, file)), '"' + root + '"', '"'+file+'"'))
                 print(line)
