@@ -1,23 +1,37 @@
 class FileItem:
-    """my first class: FooClass"""
+    """
+    my first class: FooClass
+    """
 
-    version = 0.1
+    md5 = ''
+    oldFolder = ''
+    oldFileName = ''
+    found = 0
+    foundTime = ''
+    newFolder = ''
+    newFileName = ''
 
     """
     constructor
     """
-    def __init__(self, md5, dir, fileName):
+
+    def __init__(self, md5, oldFolder, oldFileName, found='0', foundTime='', newFolder='', newFileName=''):
         self.md5 = md5
-        self.dir = dir
-        self.fileName = fileName
+        self.oldFolder = oldFolder
+        self.oldFileName = oldFileName
+        self.found = found
+        self.foundTime = foundTime
+        self.newFolder = newFolder
+        self.newFileName = newFileName
 
-    def toString(self):
-        line = ','.join((self.md5, self.dir, self.fileName))
-        return line + '\n'
+    def toCsvString(self):
+        return '{}, "{}", "{}", {}, {}, "{}", "{}"\n'.format(self.md5, self.oldFolder, self.oldFileName, self.found, self.foundTime, self.newFolder, self.newFileName)
 
-    def showver(self):
-        print(self.version)
+    def toInsertSql(self):
+        return "INSERT INTO FILES ( MD5, OLD_DIR, OLD_FILE_NAME, FOUND, FOUND_TIME, NEW_DIR, NEW_FILE_NAME ) VALUES ('{}', '{}','{}',{},datetime('{}'),'{}','{}')".format(self.md5, self.oldFolder, self.oldFileName, self.found, self.foundTime, self.newFolder, self.newFileName)
 
-    def addMe2Me(self, x):
-        """applu + operation to argument"""
-        return x+x
+
+'''
+fileItem = FileItem('md5','dir','fileName')
+print(fileItem.toCsvString())
+'''

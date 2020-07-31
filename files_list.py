@@ -5,6 +5,7 @@ import datetime
 import os
 import hashlib
 from file_item import FileItem
+from easy_sqlite import EasySqlite
 
 SCAN_PATHS = ['D:\Duke\Sounds']
 
@@ -21,36 +22,27 @@ def main():
     for path in SCAN_PATHS:
         for root, dirs, files in os.walk(path):
             for file in files:
-                fileItem = FileItem(getMd5(os.path.join(root, file)), '"' + root + '"', '"'+file+'"')
+                fileItem = FileItem(getMd5(os.path.join(root, file)), root, file)
                 records.append(fileItem)
     save(records)
 
 
 def save(records):
-    # saveToFile('ret.csv', records)
-    saveToSqliteDb('ret.sqlite', records)
+    saveToFile('ret.csv', records)
+    # saveToSqliteDb('ret.sqlite', records)
 
 
 def saveToFile(fileFullPath, records):
-    lines = []
-    for record in records:
-        lines.append(record.toString())
-
     with open(fileFullPath, 'w+') as file:
-        file.writelines(lines)
+        for record in records:
+            print(record.toCsvString())
+            file.write(record.toCsvString())
 
 
 def saveToSqliteDb(dbFileFullPath, records):
     db = EasySqlite(dbFileFullPath)
-
-    lines = []
     for record in records:
-        lines.append(record.toString())
-
-    with open(fileFullPath, 'w+') as file:
-        file.writelines(lines)
-
-
+        db.execute(record.toInsertSql())
 
 
 def getMd5(fileFullPath):

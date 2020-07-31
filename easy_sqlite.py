@@ -61,7 +61,7 @@ if __name__ == '__main__':
         );
     ''')
     # INSERT INTO FILES ( MD5, OLD_DIR, OLD_FILE_NAME, FOUND, FOUND_TIME, NEW_DIR, NEW_FILE_NAME ) VALUES ('b1fea87ea735f25bbfe04acfe846fde1', 'D:\Duke\Sounds', 'rainymood.mp4', 1, '2020-07-30 12:34:56', 'D:\Duke\Sounds', 'rainymood.mp4')
-    db.execute("INSERT INTO FILES (MD5,DIR,FILE_NAME) VALUES ({}, {}, {})".format("'b1fea87ea735f25bbfe04acfe846fdee'", "'D:\Duke\Sounds'", "'rainymood.mp4'"))
+    # db.execute("INSERT INTO FILES (MD5,DIR,FILE_NAME) VALUES ({}, {}, {})".format("'b1fea87ea735f25bbfe04acfe846fdee'", "'D:\Duke\Sounds'", "'rainymood.mp4'"))
 
 
 
