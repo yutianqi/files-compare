@@ -1,20 +1,19 @@
 #!/usr/bin/env python
 # coding=utf8
 
+# Name:         xxx.py
+# Purpose:      Run on the old PC. Record all of the files in specified folders.
+# Author:       Duke <ytq0415@gmail.com>
+# Created:      2020.07.29 20:20
+
 import datetime
 import os
 import hashlib
 from file_item import FileItem
 from easy_sqlite import EasySqlite
 
+# Scan folders
 SCAN_PATHS = ['D:\Duke\Sounds']
-
-
-# Duke
-#   Images
-#   Sounds
-#   Videos
-#   Documents
 
 
 def main():
@@ -22,14 +21,15 @@ def main():
     for path in SCAN_PATHS:
         for root, dirs, files in os.walk(path):
             for file in files:
-                fileItem = FileItem(getMd5(os.path.join(root, file)), root, file)
+                fileItem = FileItem(
+                    getMd5(os.path.join(root, file)), root, file)
                 records.append(fileItem)
     save(records)
 
 
 def save(records):
-    saveToFile('ret.csv', records)
-    # saveToSqliteDb('ret.sqlite', records)
+    # saveToFile('ret.csv', records)
+    saveToSqliteDb('ret.sqlite', records)
 
 
 def saveToFile(fileFullPath, records):

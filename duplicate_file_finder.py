@@ -4,63 +4,52 @@
 import datetime
 import os
 import hashlib
-from file_item import FileItem
+from duplicate_file_item import DuplicateFileItem
 from easy_sqlite import EasySqlite
 
-# SCAN_PATHS = ['D:\\Duke\\Code\\GitHub\\files-compare\\files']
-SCAN_PATHS = ['D:\\Duke\\独家记忆\\Images\\待删除的副本']
-
-# Duke
-#   Images
-#   Sounds
-#   Videos
-#   Documents
-
+SCAN_PATHS = ['D:\\Code\\Github\\files-compare\\files']
 
 def main():
-    records = {}
-
+    totalRecordList = []
+    uniqueRecordMap = {}
     for path in SCAN_PATHS:
-        print('Scaning path: ' + path)
         total = 0
         duplicate = 0
         for root, dirs, files in os.walk(path):
             for file in files:
-                total += 1
                 md5 = getMd5(os.path.join(root, file))
-                # print(file)
-                # print(md5)
-                oldObj = records.get(md5)
+                fileItem = DuplicateFileItem(md5, root, file)
+                totalRecordList.append(fileItem)
+                total += 1
+
+                oldObj = uniqueRecordMap.get(md5)
                 if oldObj == None:
-                    fileItem = FileItem(md5, root, file)
-                    records[fileItem.md5] = fileItem
+                    uniqueRecordMap[fileItem.md5] = fileItem
                 else:
-                    print('重复文件' + oldObj.oldFolder + "\\" + oldObj.oldFileName + " " + root + "\\" + file)
+                    oldObj.newFolder = root
+                    oldObj.newFileName = file
+                    # print('发现重复文件' + oldObj.oldFolder + "\\" + oldObj.oldFileName + " " + root + "\\" + file)
                     duplicate += 1
-        print('Total files: ' + str(total))
-        print('Duplicate files: ' + str(duplicate))
+
+    print('Total files: ' + str(len(totalRecordList)))
+    print('Duplicate files: ' + str(len(totalRecordList) - len(uniqueRecordMap)))
+
+    save(totalRecordList)
 
 
-
-
-
-
-
-
-
-
-
-
-
-def save(records):
-    saveToFile('ret.csv', records)
+def save(totalRecords):
+    saveToFile('totalRecords.csv', totalRecords, '# MD5,原目录,原文件名,是否重复,重复发现时间,重复文件,重复文件名,保留选项')
+    duplicateRecords = [item for item in totalRecords if item.newFileName != '']
+    saveToFile('duplicateRecords.csv', duplicateRecords, '# MD5,原目录,原文件名,是否重复,重复发现时间,重复文件,重复文件名,保留选项')
     # saveToSqliteDb('ret.sqlite', records)
 
 
-def saveToFile(fileFullPath, records):
+def saveToFile(fileFullPath, records, headLine=''):
     with open(fileFullPath, 'w+') as file:
+        if headLine:
+            file.write(headLine + '\n')
         for record in records:
-            print(record.toCsvString())
+            # print(record.toCsvString())
             file.write(record.toCsvString())
 
 
