@@ -15,8 +15,33 @@ from easy_sqlite import EasySqlite
 # Scan folders
 SCAN_PATHS = ['D:\Duke\Sounds']
 
+#
+DB_FILE_NAME = 'ret.sqlite'
+
+# DB = None
+DB = EasySqlite(DB_FILE_NAME)
+
 
 def main():
+    table = DB.execute(
+        "SELECT * FROM SQLITE_MASTER WHERE TYPE = 'table' AND NAME = 'FILES'")
+
+    if len(table) != 0:
+        clear = input('The table [FILES] existed. \n  0: Clear\n  1: Append\n> '.format(DB_FILE_NAME))
+        if clear == '0':
+            DB.execute("delete from FILES")
+    else:
+        DB.execute('''CREATE TABLE FILES (
+            MD5 CHAR ( 64 ) PRIMARY KEY NOT NULL,
+            OLD_DIR CHAR ( 2048 ) NOT NULL,
+            OLD_FILE_NAME CHAR ( 2048 ) NOT NULL,
+            FOUND INTEGER,
+            FOUND_TIME DATETIME,
+            NEW_DIR CHAR ( 2048 ),
+            NEW_FILE_NAME CHAR ( 2048 ),
+            MOVED INTEGER,
+            MOVED_TIME DATETIME
+        );''')
     records = []
     for path in SCAN_PATHS:
         for root, dirs, files in os.walk(path):
@@ -29,7 +54,7 @@ def main():
 
 def save(records):
     # saveToFile('ret.csv', records)
-    saveToSqliteDb('ret.sqlite', records)
+    saveToSqliteDb(records)
 
 
 def saveToFile(fileFullPath, records):
@@ -39,10 +64,9 @@ def saveToFile(fileFullPath, records):
             file.write(record.toCsvString())
 
 
-def saveToSqliteDb(dbFileFullPath, records):
-    db = EasySqlite(dbFileFullPath)
+def saveToSqliteDb(records):
     for record in records:
-        db.execute(record.toInsertSql())
+        DB.execute(record.toInsertSql())
 
 
 def getMd5(fileFullPath):
