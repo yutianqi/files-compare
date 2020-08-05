@@ -15,6 +15,7 @@ CONFIG_FILE_PATHS = ['D:\\Code\\Github\\files-compare\\duplicateRecords.csv']
 REMOVE_FOLDER = 'D:\\Code\\Github\\files-compare\\remove_folder'
 # REMOVE_FOLDER = ''
 
+
 def main():
     if REMOVE_FOLDER == '':
         tips = 'Are you confirm to delete the duplicate files permanently: yes/no\n> '
@@ -36,17 +37,28 @@ def main():
                 print(item)
                 fileItem = DuplicateFileItem(
                     item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7])
-                # print(fileItem.md5)
-                oldFile = os.path.join(fileItem.oldFolder, fileItem.oldFileName)
-                newFile = os.path.join(fileItem.newFolder, fileItem.newFileName)
-                keepItem = fileItem.keepItem
-                while(keepItem != '0' and keepItem != '1'):
-                    tips = 'Select the file to be reserved: \n  0: {}\n  1: {}\n> '.format(oldFile, newFile)
-                    keepItem = input(tips)
-                if keepItem == '0':
-                    remove(newFile, fileItem.newFileName)
-                elif keepItem == '1':
-                    remove(oldFile, fileItem.oldFileName)
+                removeDuplicateItem(fileItem)
+
+
+def removeDuplicateItem(fileItem):
+    # print(fileItem.md5)
+    oldFile = os.path.join(fileItem.oldFolder, fileItem.oldFileName)
+    newFile = os.path.join(fileItem.newFolder, fileItem.newFileName)
+    keepItem = fileItem.keepItem
+    while(keepItem != '0' and keepItem != '1'):
+        tips = 'Select the file to be reserved: \n  0: {}\n  1: {}\n> '.format(
+            oldFile, newFile)
+        keepItem = input(tips)
+    if keepItem == '0':
+        if os.path.exist(oldFile):
+            remove(newFile, fileItem.newFileName)
+        else:
+            print('Old file [%s] not exit. Remove cancelled.' % (oldFile))
+    elif keepItem == '1':
+        if os.path.exist(newFile):
+            remove(oldFile, fileItem.oldFileName)
+        else:
+            print('New file [%s] not exit. Remove cancelled.' % (newFile))
 
 
 def remove(path, fileName):
@@ -55,8 +67,9 @@ def remove(path, fileName):
         # os.remove(path)
     else:
         print('Moveing: ' + path)
-        os.rename(path, os.path.join(REMOVE_FOLDER, fileName + '.' + str(time.time())))
-    
+        os.rename(path, os.path.join(REMOVE_FOLDER,
+                                     fileName + '.' + str(time.time())))
+
 
 if '__main__' == __name__:
     main()
