@@ -4,10 +4,12 @@
 import datetime
 import os
 import hashlib
+import time
 from duplicate_file_item import DuplicateFileItem
 from easy_sqlite import EasySqlite
 
 SCAN_PATHS = ['D:\\Code\\Github\\files-compare\\files']
+
 
 def main():
     totalRecordList = []
@@ -38,9 +40,11 @@ def main():
 
 
 def save(totalRecords):
-    saveToFile('totalRecords.csv', totalRecords, '# MD5,原目录,原文件名,是否重复,重复发现时间,重复文件,重复文件名,保留选项')
+    saveToFile('totalRecords.{}.csv'.format(str(time.time())), totalRecords,
+               '# MD5,原目录,原文件名,是否重复,重复发现时间,重复文件,重复文件名,保留选项,处理结果')
     duplicateRecords = [item for item in totalRecords if item.newFileName != '']
-    saveToFile('duplicateRecords.csv', duplicateRecords, '# MD5,原目录,原文件名,是否重复,重复发现时间,重复文件,重复文件名,保留选项')
+    saveToFile('duplicateRecords.{}.csv'.format(str(time.time())), duplicateRecords,
+               '# MD5,原目录,原文件名,是否重复,重复发现时间,重复文件,重复文件名,保留选项,处理结果')
     # saveToSqliteDb('ret.sqlite', records)
 
 
