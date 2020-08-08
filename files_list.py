@@ -15,13 +15,17 @@ from easy_sqlite import EasySqlite
 # Scan folders
 SCAN_PATHS = ['D:\\Duke\\Images']
 
+
+SAVE_TYPE = 'CSV'
+# SAVE_TYPE = 'DB'
+
+CSV_FILE_NAME = 'ret.csv'
+
 #
 DB_FILE_NAME = 'ret.sqlite'
-
 DB = None
 
-# SAVE_TYPE = 'DB'
-SAVE_TYPE = 'CSV'
+
 
 def main():
     if SAVE_TYPE == 'DB':
@@ -65,7 +69,7 @@ def save(records):
     if SAVE_TYPE == 'DB':
         saveToSqliteDb(records)
     elif SAVE_TYPE == 'CSV':
-        saveToFile('ret.csv', records)
+        saveToFile(CSV_FILE_NAME, records)
     else:
         print('Invalid SAVE_TYPE: [%s]' % (SAVE_TYPE))
 
