@@ -13,16 +13,33 @@ from file_item import FileItem
 from easy_sqlite import EasySqlite
 
 # Scan folders
-SCAN_PATHS = ['D:\Duke\Sounds']
+SCAN_PATHS = ['D:\\Duke\\Images']
 
 #
 DB_FILE_NAME = 'ret.sqlite'
 
-# DB = None
-DB = EasySqlite(DB_FILE_NAME)
+DB = None
 
+# SAVE_TYPE = 'DB'
+SAVE_TYPE = 'CSV'
 
 def main():
+    if SAVE_TYPE == 'DB':
+        initDb()
+    records = []
+    for path in SCAN_PATHS:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                fileItem = FileItem(
+                    getMd5(os.path.join(root, file)), root, file)
+                records.append(fileItem)
+    save(records)
+
+
+def initDb():
+    global DB 
+    DB = EasySqlite(DB_FILE_NAME)
+
     table = DB.execute(
         "SELECT * FROM SQLITE_MASTER WHERE TYPE = 'table' AND NAME = 'FILES'")
 
@@ -42,19 +59,15 @@ def main():
             MOVED INTEGER,
             MOVED_TIME DATETIME
         );''')
-    records = []
-    for path in SCAN_PATHS:
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                fileItem = FileItem(
-                    getMd5(os.path.join(root, file)), root, file)
-                records.append(fileItem)
-    save(records)
 
 
 def save(records):
-    # saveToFile('ret.csv', records)
-    saveToSqliteDb(records)
+    if SAVE_TYPE == 'DB':
+        saveToSqliteDb(records)
+    elif SAVE_TYPE == 'CSV':
+        saveToFile('ret.csv', records)
+    else:
+        print('Invalid SAVE_TYPE: [%s]' % (SAVE_TYPE))
 
 
 def saveToFile(fileFullPath, records):

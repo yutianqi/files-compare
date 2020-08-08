@@ -53,12 +53,12 @@ def removeDuplicateItem(fileItem):
         if os.path.exist(oldFile):
             remove(newFile, fileItem.newFileName)
         else:
-            print('Old file [%s] not exit. Remove cancelled.' % (oldFile))
+            print('Old file [%s] not exit. Remove operation cancelled.' % (oldFile))
     elif keepItem == '1':
         if os.path.exist(newFile):
             remove(oldFile, fileItem.oldFileName)
         else:
-            print('New file [%s] not exit. Remove cancelled.' % (newFile))
+            print('New file [%s] not exit. Remove operation cancelled.' % (newFile))
 
 
 def remove(path, fileName):
