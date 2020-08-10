@@ -8,7 +8,7 @@ from duplicate_file_item import DuplicateFileItem
 from file_name_enum import FILE_NAME
 
 
-CONFIG_FILE_PATHS = [os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.DUPLICATE_FILES.value)]
+DUPLICATE_FILE_PATHS = [os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.DUPLICATE_FILES.value)]
 
 # REMOVE_FOLDER = FILE_NAME.REMOVE_FOLDER.value
 REMOVE_FOLDER = ''
@@ -25,9 +25,9 @@ def main():
         print('REMOVE_FOLDER [%s] does not exist.' % (REMOVE_FOLDER))
         return
 
-    # print(CONFIG_FILE_PATHS)
+    # print(DUPLICATE_FILE_PATHS)
 
-    for path in CONFIG_FILE_PATHS:
+    for path in DUPLICATE_FILE_PATHS:
         print(path)
         with open(path, 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
