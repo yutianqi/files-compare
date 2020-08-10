@@ -10,25 +10,26 @@ from duplicate_file_item import DuplicateFileItem
 from file_name_enum import FILE_NAME
 
 
-# SCAN_PATHS = ['D:\\Duke\\Sounds']
-SCAN_PATHS = ['D:\\Duke\\独家记忆\\Images\\']
+SCAN_PATHS = ['D:\\Code\\Github\\files-compare\\test_env\\files']
+# SCAN_PATHS = ['D:\\Duke\\独家记忆\\Images\\']
 
 
 TIME_STAMP = str(time.time())
-WORK_DIR = 'files\\'
 
 
 def main():
     initPath()
     records = scanPath()
-    save(os.path.join(WORK_DIR, FILE_NAME.FILES), records, '# MD5,目录,文件名')
+    save(os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.FILES.value),
+         records, '# MD5,目录,文件名')
     duplicateRecords = getDuplicateRecords(records)
-    save(os.path.join(WORK_DIR, FILE_NAME.DUPLICATE_FILES), duplicateRecords, '# MD5,原目录,原文件名,新目录,新文件名,保留项')
+    save(os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.DUPLICATE_FILES.value),
+         duplicateRecords, '# MD5,原目录,原文件名,新目录,新文件名,保留项')
 
 
 def initPath():
-    if not os.path.exists(WORK_DIR):
-        os.makedirs(WORK_DIR)
+    if not os.path.exists(FILE_NAME.WORK_DIR.value):
+        os.makedirs(FILE_NAME.WORK_DIR.value)
 
 
 def scanPath():
@@ -65,13 +66,12 @@ def getDuplicateRecords(records):
     return duplicateRecords
 
 
-
 def save(filePath, records, headLine = ''):
     print('\nSaving...')
     with open(filePath, 'w+', encoding='utf-8') as file:
         file.write(headLine + '\n')
         for record in records:
-            print('   %s' % (record))
+            # print('   %s' % (record))
             file.write(record.toCsvString())
             
     print('-> %s created...' % (filePath))
