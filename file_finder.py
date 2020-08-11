@@ -10,7 +10,7 @@ from duplicate_file_item import DuplicateFileItem
 from file_name_enum import FILE_NAME
 import csv
 
-SCAN_PATHS = ['D:\\Code\\Github\\files-compare\\test_env\\files_new']
+SCAN_PATHS = ['D:\\Duke\\独家记忆\\Images']
 
 DATA_FILE_PATH = os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.FILES.value)
 
@@ -31,7 +31,7 @@ def main():
     foundFiles = []
     for item in existedFiles:
         oldFileItem = oldFileMap.get(item.md5)
-        duplicateFileItem = DuplicateFileItem(oldFileItem.md5, oldFileItem.folder, oldFileItem.fileName, item.folder, item.fileName)
+        duplicateFileItem = DuplicateFileItem(oldFileItem.md5, oldFileItem.folder, oldFileItem.fileName, [(item.folder, item.fileName)])
         foundFiles.append(duplicateFileItem)
     save(os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.FOUND_FILES.value), foundFiles, '# MD5,原目录,原文件名,新目录,新文件名,已处理')
 
