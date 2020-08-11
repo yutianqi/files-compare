@@ -14,11 +14,11 @@ class DuplicateFileItem:
         self.keepItem = keepItem
 
     def toCsvString(self):
-        ret = '{},"{}","{}","{}",{}\n'.format(
-            self.md5, self.oldFolder, self.oldFileName, self.newFiles[0], self.keepItem)
+        ret = '{},"{}","{}","{}","{}",{}\n'.format(
+            self.md5, self.oldFolder, self.oldFileName, self.newFiles[0][0], self.newFiles[0][1], self.keepItem)
         if len(self.newFiles) > 1:
             for item in self.newFiles[1:]:
-                ret += ',,,"{}",{}\n'.format(item, self.keepItem)
+                ret += ',,,"{}","{}",{}\n'.format(item[0], item[1], self.keepItem)
         return ret
 
 def main():
