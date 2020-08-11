@@ -10,8 +10,8 @@ from duplicate_file_item import DuplicateFileItem
 from file_name_enum import FILE_NAME
 
 
-SCAN_PATHS = ['D:\\Code\\Github\\files-compare\\test_env\\files']
-# SCAN_PATHS = ['D:\\Duke\\独家记忆\\Images\\']
+# SCAN_PATHS = ['D:\\Code\\Github\\files-compare\\test_env\\files']
+SCAN_PATHS = ['D:\\Duke\\独家记忆\\Images\\']
 
 
 TIME_STAMP = str(time.time())
