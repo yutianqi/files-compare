@@ -10,8 +10,8 @@ from file_name_enum import FILE_NAME
 
 DUPLICATE_FILE_PATHS = [os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.DUPLICATE_FILES.value)]
 
-# REMOVE_FOLDER = FILE_NAME.REMOVE_FOLDER.value
-REMOVE_FOLDER = ''
+REMOVE_FOLDER = FILE_NAME.REMOVE_FOLDER.value
+# REMOVE_FOLDER = ''
 
 
 def main():
@@ -28,49 +28,60 @@ def main():
     # print(DUPLICATE_FILE_PATHS)
 
     for path in DUPLICATE_FILE_PATHS:
-        print(path)
+        print("Processing the duplicate files in %s" % (path))
         with open(path, 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
             # Ignore the head line
             next(reader)
+            fileItem = None
             for item in reader:
-                if len(item) != 6:
+                if len(item) != 5:
                     print('Invalid data:' + str(item))
                     continue
-                print(item)
-                fileItem = DuplicateFileItem(
-                    item[0], item[1], item[2], item[3], item[4], item[5])
-                removeDuplicateItem(fileItem)
+                if item[0] != '':
+                    removeDuplicateItem(fileItem)
+                    fileItem = DuplicateFileItem(item[0], item[1], item[2], [item[3]], item[4])
+                else:
+                    fileItem.newFiles.append(item[3])
+            removeDuplicateItem(fileItem)
 
 
 def removeDuplicateItem(fileItem):
-    # print(fileItem.md5)
-    oldFile = os.path.join(fileItem.oldFolder, fileItem.oldFileName)
-    newFile = os.path.join(fileItem.newFolder, fileItem.newFileName)
-    keepItem = fileItem.keepItem
-    while(keepItem != '0' and keepItem != '1'):
-        tips = 'Select the file to be reserved: \n  0: {}\n  1: {}\n> '.format(
-            oldFile, newFile)
-        keepItem = input(tips)
-    if keepItem == '0':
-        if os.path.exists(oldFile):
-            remove(newFile, fileItem.newFileName)
-        else:
-            print('Old file [%s] not exit. Remove operation cancelled.' % (oldFile))
-    elif keepItem == '1':
-        if os.path.exists(newFile):
-            remove(oldFile, fileItem.oldFileName)
-        else:
-            print('New file [%s] not exit. Remove operation cancelled.' % (newFile))
+    if fileItem == None:
+        return
+    print('-> %s' % (fileItem.md5))
+    if fileItem.keepItem == '':
+        print('   Not specify keep item...')    
+        return
+    files = [os.path.join(fileItem.oldFolder, fileItem.oldFileName)]
+    files.extend(fileItem.newFiles)
 
+    keepItemIndex = int(fileItem.keepItem)
 
-def remove(path, fileName):
-    if REMOVE_FOLDER == '':
-        print('Removeing: ' + path)
-        os.remove(path)
+    print("   %d copies, reserve the [%d] one." % (len(files), keepItemIndex))
+
+    if (keepItemIndex >= len(files)):
+        print("   Delete index out of range.")
+
+    reservedFile = files.pop(keepItemIndex)
+
+    if os.path.exists(reservedFile):
+        remove(files)
     else:
-        print('Moveing: ' + path)
-        os.rename(path, os.path.join(REMOVE_FOLDER, fileName + '.' + str(time.time())))
+        print('   Reserved file [%s] not exit. Remove operation cancelled.' % (reservedFile))
+
+
+def remove(paths):
+    for path in paths:
+        if not os.path.exists(path):
+            print('   > Already removed: ' + path)
+            continue
+        if REMOVE_FOLDER == '':
+            print('   > Removeing: ' + path)
+            os.remove(path)
+        else:
+            print('   > Moveing: ' + path)
+            os.rename(path, os.path.join(REMOVE_FOLDER, os.path.basename(path) + '.' + str(time.time())))
 
 
 if '__main__' == __name__:

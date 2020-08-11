@@ -24,7 +24,7 @@ def main():
          records, '# MD5,目录,文件名')
     duplicateRecords = getDuplicateRecords(records)
     save(os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.DUPLICATE_FILES.value),
-         duplicateRecords, '# MD5,原目录,原文件名,新目录,新文件名,保留项')
+         duplicateRecords, '# MD5,原目录,原文件名,新文件,保留项')
 
 
 def initPath():
@@ -51,18 +51,20 @@ def scanPath():
 def getDuplicateRecords(records):
     print('\nFinding duplicate files...')
     uniqueRecordMap = {}
-    duplicateRecords = []
+    duplicateRecords = {}
     duplicate = 0
     for record in records:
         oldObj = uniqueRecordMap.get(record.md5)
         if oldObj == None:
-            uniqueRecordMap[record.md5] = DuplicateFileItem(record.md5, record.folder, record.fileName)
-        else:
-            oldObj.newFolder = record.folder
-            oldObj.newFileName = record.fileName
-            duplicateRecords.append(oldObj)
+            uniqueRecordMap[record.md5] = DuplicateFileItem(record.md5, record.folder, record.fileName, [])
+        else:            
+            fullPath = os.path.join(record.folder, record.fileName)
+            oldObj.newFiles.append(fullPath)
             duplicate += 1
+
     print('-> Duplicate files: %d' % (duplicate))
+    duplicateRecords = [item[1] for item in uniqueRecordMap.items() if len(item[1].newFiles) != 0]
+
     return duplicateRecords
 
 
