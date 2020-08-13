@@ -31,7 +31,7 @@ def main():
     foundFiles = []
     for item in existedFiles:
         oldFileItem = oldFileMap.get(item.md5)
-        duplicateFileItem = DuplicateFileItem(oldFileItem.md5, oldFileItem.folder, oldFileItem.fileName, item.folder, item.fileName)
+        duplicateFileItem = DuplicateFileItem(oldFileItem.md5, oldFileItem.folder, oldFileItem.fileName, [(item.folder, item.fileName)])
         foundFiles.append(duplicateFileItem)
     save(os.path.join(FILE_NAME.WORK_DIR.value, FILE_NAME.FOUND_FILES.value), foundFiles, '# MD5,原目录,原文件名,新目录,新文件名,已处理')
 

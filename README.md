@@ -1,4 +1,55 @@
 
+
+
+
+
+
+
+
+
+
+
+                    
+# file_lister 
+    分析数据                            
+        |
+        |       0_files.csv
+        |       1.1_duplicate_files.csv 
+        |
+        V
+
+#  duplicate_file_remover
+    删除数据
+
+        |
+        |       
+        |
+        V
+
+# file_lister   
+    分析数据                            
+
+        |
+        |       0_files.csv        
+        |
+        V
+        
+# file_finder
+            # 生成2.1_new_files.csv/2.2_found_files.csv/2.3_missed_files.csv
+
+                # new_file_mover
+                    # 加载new_files.csv
+                    
+                # found_files.csv
+
+                # missed_files.csv
+
+
+
+
+
+
+
 # file_lister
 
     # 生成1.1_duplicate_files.csv 
