@@ -8,10 +8,9 @@ from duplicate_file_item import DuplicateFileItem
 from file_name_enum import FILE_NAME
 
 
-DUPLICATE_FILE_PATHS = [os.path.join(
-    FILE_NAME.WORK_DIR.value, FILE_NAME.DUPLICATE_FILES.value)]
+DUPLICATE_FILE_PATHS = ['D:\\Duke\\GitHub\\files-compare\\files\\Duke\\独家记忆\\Images\\第四轮\\1_duplicate_files.csv']
 
-REMOVE_FOLDER = FILE_NAME.REMOVE_FOLDER.value
+REMOVE_FOLDER = 'D:\\remove_folder\\images'
 # REMOVE_FOLDER = ''
 
 
