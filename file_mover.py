@@ -57,9 +57,10 @@ def performOperation(items):
             if not os.path.exists(item[3]):
                 os.makedirs(item[3])
             newFilePath = os.path.join(item[3], item[4])
-
+            print("Moving [%s] to [%s]" % (oldFilePath, newFilePath))
             os.rename(oldFilePath, newFilePath)
         else:
+            print("Removing [%s]" % (oldFilePath))
             os.remove(oldFilePath)
 
 
